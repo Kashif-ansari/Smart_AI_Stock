@@ -32,8 +32,18 @@ def _forecast_fingerprint(data: pd.DataFrame) -> int:
 st.title("Smart Inventory Advisor")
 st.caption("Ask grounded questions about the latest forecast, current inventory, and replenishment risks.")
 
-# Configure GROQ_API_KEY as a local environment variable or a Streamlit Cloud secret.
-groq_api_key = os.getenv("GROQ_API_KEY", "")
+with st.sidebar:
+    st.header("Groq connection")
+    groq_api_key = st.text_input(
+        "GROQ_API_KEY",
+        value=os.getenv("GROQ_API_KEY", ""),
+        type="password",
+        help="Your key is held only in this Streamlit session and is used to answer chat requests.",
+    )
+    if groq_api_key.strip():
+        st.success("Groq key ready")
+    else:
+        st.warning("Add a Groq API key to enable answers")
 
 forecast_results = st.session_state.get("forecast_results")
 source_data = st.session_state.get("forecast_source")
@@ -57,8 +67,6 @@ if st.session_state.get("rag_store_fingerprint") != fingerprint:
         st.stop()
 
 st.success(f"Knowledge base ready: {len(forecast_results):,} forecasted products are available for retrieval.")
-if not groq_api_key.strip():
-    st.warning("The inventory advisor is unavailable until the GROQ_API_KEY deployment secret is configured.")
 if "inventory_chat_history" not in st.session_state:
     st.session_state["inventory_chat_history"] = []
 
@@ -87,7 +95,7 @@ if user_query:
         st.markdown(user_query)
     with st.chat_message("assistant"):
         if not groq_api_key.strip():
-            answer = "The inventory advisor is not configured yet. Add GROQ_API_KEY to the app's deployment secrets."
+            answer = "Add your GROQ_API_KEY in the sidebar, then send this question again."
             st.warning(answer)
         else:
             try:
