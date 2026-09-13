@@ -1,0 +1,348 @@
+To build **SmartStock AI** reliably without overloading an LLM or causing hallucinations, the application needs to be split into distinct, modular building blocks.
+
+Below is a complete, multi-stage prompt sequence. You can feed these prompts one by one into your AI coding assistant (Cursor, GitHub Copilot, ChatGPT, etc.) to build the app step-by-step.
+
+---
+
+### Phase 1: Project Setup & Core Environment
+
+**Prompt 1.1: Project Structure and Setup**
+
+> Create a clean, modular Python project structure for a Streamlit web application named `SmartStock AI`.
+> * Project layout:
+> * `app.py` (Main entry point)
+> * `pages/` (`1_🏠_Home.py`, `2_📊_Demand_Forecasting.py`, `3_📦_Smart_Inventory_RAG.py`, `4_👥_About_Us.py`)
+> * `modules/` (`data_loader.py`, `forecaster.py`, `rag_engine.py`, `calendar_utils.py`)
+> * `requirements.txt`
+> * `.env`
+> 
+> 
+> * Provide a `requirements.txt` file containing: `streamlit`, `pandas`, `numpy`, `torch`, `transformers`, `hijri-converter`, `faiss-cpu`, `langchain`, `langchain-community`, `langchain-groq`, `sentence-transformers`, `openpyxl`, `plotly`.
+> * Include basic setup code in `app.py` configuring a modern, e-commerce themed UI using custom CSS (sleek dark/light theme with primary colors `#00C853` and `#1E88E5`).
+> 
+> 
+
+---
+
+### Phase 2: Data Preprocessing & Calendar Conversion
+
+**Prompt 2.1: Data Ingestion & Auto-Formatting (`data_loader.py`)**
+
+> Write a Python module `modules/data_loader.py` that handles multi-format file uploads (CSV, Excel `.xlsx`/`.xls`, JSON, SQLite `.db`).
+> Function requirements:
+> 1. `load_raw_data(uploaded_file)`: Automatically detects file extension and loads it into a Pandas DataFrame.
+> 2. `standardize_sales_data(df)`: Maps raw user columns (e.g., "Item Name", "Qty Sold", "Sale Date", "Price") into unified schema columns: `['date', 'product_id', 'product_name', 'category', 'units_sold', 'stock_on_hand']`. Provide clear exception handling and sensible defaults for missing columns.
+> 3. Return the clean DataFrame along with a processing status report.
+> 
+> 
+
+**Prompt 2.2: Dual Calendar & Holiday Feature Integration (`calendar_utils.py`)**
+
+> Write a Python module `modules/calendar_utils.py` that processes dates and integrates Gregorian and Islamic (Hijri) calendars.
+> Function requirements:
+> 1. `get_next_week_dates(start_date=None)`: Generates a 7-day date range starting from next Monday.
+> 2. `enrich_calendar_features(df)`: Takes a DataFrame with a `date` column and adds:
+> * `day_of_week`, `is_weekend`, `month`
+> * `hijri_day`, `hijri_month`, `hijri_year` using the `hijri-converter` library.
+> * Boolean indicator `is_ramadan` or `is_eid` based on Hijri months (9th month for Ramadan, 10th and 12th for Eids).
+> 
+> 
+> 3. Provide a helper function `convert_gregorian_to_hijri_string(date_obj)` for displaying dates neatly in the Streamlit UI.
+> 
+> 
+
+---
+
+### Phase 3: AI Time-Series Demand Forecasting Model
+
+**Prompt 3.1: Pretrained Time-Series Model Engine (`forecaster.py`)**
+
+> Write a Python module `modules/forecaster.py` using Hugging Face Transformers to forecast next-week sales demand.
+> Technical details:
+> 1. Use a lightweight time-series model or zero-shot forecaster like `ibm-granite/granite-timeseries-ttm-r3` or a fallback `Chronos`/`Prophet` pipeline.
+> 2. Function `predict_next_week_sales(historical_df, forecast_days=7)`:
+> * Group sales data by `product_id` and `date`.
+> * Pass the daily sales time-series through the model.
+> * Multiply baseline predictions by calendar modifiers (e.g., +25% boost if `is_ramadan` or `is_eid` is true).
+> 
+> 
+> 3. Output a summarized DataFrame containing:
+> * `product_id`, `product_name`, `category`, `predicted_units_next_week`, `sales_rank`, `reorder_recommended` (True if `predicted_units` > `stock_on_hand`).
+> 
+> 
+> 4. Ensure the function runs safely on CPU with proper caching using `@st.cache_data`.
+> 
+> 
+
+---
+
+### Phase 4: RAG & Smart Inventory Engine
+
+**Prompt 4.1: FAISS Vector Store & Groq LLM RAG Setup (`rag_engine.py`)**
+
+> Write a Python module `modules/rag_engine.py` using LangChain, FAISS, Sentence Transformers, and Groq API (`langchain-groq`).
+> Requirements:
+> 1. Function `build_inventory_knowledge_base(sales_summary_df, stock_df)`:
+> * Converts product sales metrics, current stock, predicted demand, and reorder alerts into formatted string documents.
+> * Embeds these documents using `sentence-transformers/all-MiniLM-L6-v2`.
+> * Stores them in a local FAISS vector store.
+> 
+> 
+> 2. Function `query_smart_inventory_rag(user_query, faiss_store, groq_api_key)`:
+> * Retrieves top-k relevant context chunks from FAISS based on the store manager's prompt.
+> * Connects to Groq using model `llama-3.1-8b-instant` or `mixtral-8x7b-32768`.
+> * Returns actionable inventory advice (e.g., "Which products are at risk of stockouts during Ramadan?", "Generate a purchase order list").
+> 
+> 
+> 
+> 
+
+---
+
+### Phase 5: Multi-Page UI Implementation
+
+**Prompt 5.1: Home Page (`pages/1_🏠_Home.py`)**
+
+> Create a modern, interactive e-commerce styled Streamlit home page (`pages/1_🏠_Home.py`).
+> Design guidelines:
+> * **Hero Section**: High-impact header for **SmartStock AI** with subtitle "AI-Powered Demand Forecasting & Smart Inventory Optimization".
+> * **Problem & Solution Cards**: Interactive metrics showing how it solves store problems (Overstocking vs. Stockouts, Automated Dual-Calendar Alignment).
+> * **Feature Grid**: Use columns to display key capabilities:
+> * 🔮 Pretrained Time-Series Forecasting
+> * 🌙 Gregorian & Islamic Calendar Awareness
+> * 📁 Multi-Format Data Ingestion
+> * 💬 RAG-Powered Inventory Advisor (Groq + FAISS)
+> 
+> 
+> * **Call to Action**: Quick-action buttons navigating users directly to the Prediction and RAG pages.
+> 
+> 
+
+**Prompt 5.2: Demand Forecasting Page (`pages/2_📊_Demand_Forecasting.py`)**
+
+> Create the core prediction page titled "Demand Forecasting & Sales Ranking".
+> Workflow:
+> 1. **Sidebar**: Allow user to upload files (CSV, XLSX, DB) or click "Load Sample Dataset".
+> 2. **Calendar Inputs**: Automatically pick up next week's date range, displaying both Gregorian and Hijri dates.
+> 3. **Run Predictions**: Execute `forecaster.py` and display:
+> * Key Performance Indicators (KPIs): Total Expected Sales, Top Predicted Category, High Stockout Risk Items.
+> * Interactive Plotly chart showing top 10 best-selling predicted products.
+> * Searchable Pandas DataTable with reorder recommendations and export to CSV/Excel button.
+> 
+> 
+> 
+> 
+
+**Prompt 5.3: Smart Inventory RAG Chat Page (`pages/3_📦_Smart_Inventory_RAG.py`)**
+
+> Create a conversational RAG page for store inventory management.
+> Workflow:
+> 1. Load context from the forecast results generated in Page 2.
+> 2. Sidebar field for `GROQ_API_KEY` with visual connection status.
+> 3. Interactive Streamlit chat interface (`st.chat_input` and `st.chat_message`).
+> 4. Include quick suggested prompts as clickable buttons:
+> * *"Which 5 items need immediate restocking?"*
+> * *"How will upcoming holidays affect our dairy category sales?"*
+> * *"Generate a supplier purchase order summary for top sellers."*
+> 
+> 
+> 5. Call `query_smart_inventory_rag` to generate instant answers using vector search and Groq processing.
+> 
+> 
+
+**Prompt 5.4: Team & About Page (`pages/4_👥_About_Us.py`)**
+
+> Create an e-commerce themed "Meet the Team" page (`pages/4_👥_About_Us.py`).
+> Specifications:
+> * Header introducing the mission behind SmartStock AI.
+> * Display 6 team member cards in a grid layout (3x2 format) using Streamlit containers and CSS cards:
+> 1. **Team Leader**: Lead AI Architect & Data Scientist
+> 2. **Member 2**: Machine Learning Engineer (Time-Series Specialist)
+> 3. **Member 3**: RAG & Knowledge Systems Developer
+> 4. **Member 4**: Full-Stack Streamlit UI/UX Designer
+> 5. **Member 5**: Data Engineering & Ingestion Specialist
+> 6. **Member 6**: Business Intelligence & Domain Analyst
+> 
+> 
+> * Include placeholders for avatars, social links (LinkedIn, GitHub), and their key contributions to the app.
+> 
+> 
+
+---
+
+### Verification and Integration Checklist
+
+After executing the prompts above sequentially, verify the system components:
+
+```
+SmartStock_AI/
+├── .env
+├── requirements.txt
+├── app.py                     # Main navigation & custom styling
+├── modules/
+│   ├── __init__.py
+│   ├── data_loader.py          # Handles CSV, Excel, DB imports
+│   ├── calendar_utils.py       # Gregorian + Hijri conversions
+│   ├── forecaster.py           # HF Time-Series Transformer model
+│   └── rag_engine.py           # FAISS + Groq RAG integration
+└── pages/
+    ├── 1_🏠_Home.py            # Overview & E-commerce solutions
+    ├── 2_📊_Demand_Forecasting.py # Sales predictions & metrics
+    ├── 3_📦_Smart_Inventory_RAG.py# AI Assistant for stock queries
+    └── 4_👥_About_Us.py       # 6-Member team showcase
+
+```
+____________________________________________
+
+Create a clean, modular Python project structure for a Streamlit web application named SmartStock AI.
+
+Project layout:
+
+app.py (Main entry point)
+
+pages/ (1_🏠_Home.py, 2_📊_Demand_Forecasting.py, 3_📦_Smart_Inventory_RAG.py, 4_👥_About_Us.py)
+
+modules/ (data_loader.py, forecaster.py, rag_engine.py, calendar_utils.py)
+
+requirements.txt
+
+.env
+
+Provide a requirements.txt file containing: streamlit, pandas, numpy, torch, transformers, hijri-converter, faiss-cpu, langchain, langchain-community, langchain-groq, sentence-transformers, openpyxl, plotly.
+
+Include basic setup code in app.py configuring a modern, e-commerce themed UI using custom CSS (sleek dark/light theme with primary colors #00C853 and #1E88E5).
+
+____________________________________________
+
+Write a Python module modules/data_loader.py that handles multi-format file uploads (CSV, Excel .xlsx/.xls, JSON, SQLite .db).
+Function requirements:
+
+load_raw_data(uploaded_file): Automatically detects file extension and loads it into a Pandas DataFrame.
+
+standardize_sales_data(df): Maps raw user columns (e.g., "Item Name", "Qty Sold", "Sale Date", "Price") into unified schema columns: ['date', 'product_id', 'product_name', 'category', 'units_sold', 'stock_on_hand']. Provide clear exception handling and sensible defaults for missing columns.
+
+Return the clean DataFrame along with a processing status report.
+_____________________________________________
+
+Write a Python module modules/calendar_utils.py that processes dates and integrates Gregorian and Islamic (Hijri) calendars.
+Function requirements:
+
+get_next_week_dates(start_date=None): Generates a 7-day date range starting from next Monday.
+
+enrich_calendar_features(df): Takes a DataFrame with a date column and adds:
+
+day_of_week, is_weekend, month
+
+hijri_day, hijri_month, hijri_year using the hijri-converter library.
+
+Boolean indicator is_ramadan or is_eid based on Hijri months (9th month for Ramadan, 10th and 12th for Eids).
+
+Provide a helper function convert_gregorian_to_hijri_string(date_obj) for displaying dates neatly in the Streamlit UI.
+__________________________________________________
+
+Write a Python module modules/forecaster.py using Hugging Face Transformers to forecast next-week sales demand.
+Technical details:
+
+Use a lightweight time-series model or zero-shot forecaster like ibm-granite/granite-timeseries-ttm-r3 or a fallback Chronos/Prophet pipeline.
+
+Function predict_next_week_sales(historical_df, forecast_days=7):
+
+Group sales data by product_id and date.
+
+Pass the daily sales time-series through the model.
+
+Multiply baseline predictions by calendar modifiers (e.g., +25% boost if is_ramadan or is_eid is true).
+
+Output a summarized DataFrame containing:
+
+product_id, product_name, category, predicted_units_next_week, sales_rank, reorder_recommended (True if predicted_units > stock_on_hand).
+
+Ensure the function runs safely on CPU with proper caching using @st.cache_data.
+___________________________________________________________
+
+Write a Python module modules/rag_engine.py using LangChain, FAISS, Sentence Transformers, and Groq API (langchain-groq).Requirements:Function build_inventory_knowledge_base(sales_summary_df, stock_df):Converts product sales metrics, current stock, predicted demand, and reorder alerts into formatted string documents.Embeds these documents using sentence-transformers/all-MiniLM-L6-v2.  Stores them in a local FAISS vector store.  Function query_smart_inventory_rag(user_query, faiss_store, groq_api_key):Retrieves top-k relevant context chunks from FAISS based on the store manager's prompt.  Connects to Groq using model llama-3.1-8b-instant or mixtral-8x7b-32768.  Returns actionable inventory advice (e.g., "Which products are at risk of stockouts during Ramadan?", "Generate a purchase order list").
+
+___________________________________________________________
+
+Create a modern, interactive e-commerce styled Streamlit home page (pages/1_🏠_Home.py).
+Design guidelines:
+
+Hero Section: High-impact header for SmartStock AI with subtitle "AI-Powered Demand Forecasting & Smart Inventory Optimization".
+
+Problem & Solution Cards: Interactive metrics showing how it solves store problems (Overstocking vs. Stockouts, Automated Dual-Calendar Alignment).
+
+Feature Grid: Use columns to display key capabilities:
+
+🔮 Pretrained Time-Series Forecasting
+
+🌙 Gregorian & Islamic Calendar Awareness
+
+📁 Multi-Format Data Ingestion
+
+💬 RAG-Powered Inventory Advisor (Groq + FAISS)
+
+Call to Action: Quick-action buttons navigating users directly to the Prediction and RAG pages.
+
+___________________________________________________
+
+Create the core prediction page titled "Demand Forecasting & Sales Ranking".
+Workflow:
+
+Sidebar: Allow user to upload files (CSV, XLSX, DB) or click "Load Sample Dataset".
+
+Calendar Inputs: Automatically pick up next week's date range, displaying both Gregorian and Hijri dates.
+
+Run Predictions: Execute forecaster.py and display:
+
+Key Performance Indicators (KPIs): Total Expected Sales, Top Predicted Category, High Stockout Risk Items.
+
+Interactive Plotly chart showing top 10 best-selling predicted products.
+
+Searchable Pandas DataTable with reorder recommendations and export to CSV/Excel button.
+__________________________________________
+
+Create a conversational RAG page for store inventory management.
+Workflow:
+
+Load context from the forecast results generated in Page 2.
+
+Sidebar field for GROQ_API_KEY with visual connection status.
+
+Interactive Streamlit chat interface (st.chat_input and st.chat_message).
+
+Include quick suggested prompts as clickable buttons:
+
+"Which 5 items need immediate restocking?"
+
+"How will upcoming holidays affect our dairy category sales?"
+
+"Generate a supplier purchase order summary for top sellers."
+
+Call query_smart_inventory_rag to generate instant answers using vector search and Groq processing.
+
+__________________________________________________
+
+Create an e-commerce themed "Meet the Team" page (pages/4_👥_About_Us.py).
+Specifications:
+
+Header introducing the mission behind SmartStock AI.
+
+Display 6 team member cards in a grid layout (3x2 format) using Streamlit containers and CSS cards:
+
+Team Leader: Lead AI Architect & Data Scientist
+
+Member 2: Machine Learning Engineer (Time-Series Specialist)
+
+Member 3: RAG & Knowledge Systems Developer
+
+Member 4: Full-Stack Streamlit UI/UX Designer
+
+Member 5: Data Engineering & Ingestion Specialist
+
+Member 6: Business Intelligence & Domain Analyst
+
+Include placeholders for avatars, social links (LinkedIn, GitHub), and their key contributions to the app.
+
+____________________________________________
+
+

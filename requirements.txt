@@ -1,0 +1,14 @@
+streamlit
+pandas
+numpy
+torch
+transformers
+hijri-converter
+faiss-cpu
+langchain
+langchain-community
+langchain-groq
+sentence-transformers
+openpyxl
+plotly
+
