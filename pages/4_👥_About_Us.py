@@ -17,7 +17,7 @@ TEAM = [
         "Machine Learning Engineer",
         "ML",
         "Builds and evaluates time-series models that turn sales history into dependable demand signals.",
-        "lnkedin.com/in/muhammad-ahsan-59120522",
+        "https://www.linkedin.com/in/muhammad-ahsan-59120522",
         "https://github.com/ahsan14262",
     ),
     (
