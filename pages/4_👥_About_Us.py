@@ -58,7 +58,7 @@ st.markdown(
     """
     <style>
         .team-hero {
-            padding: 2.7rem 2.3rem; border-radius: 22px; color: white;
+            padding: 2.7rem 2.3rem; border-radius: 30px; color: white;
             background: linear-gradient(115deg, #0F172A, #1E88E5 65%, #00C853);
             box-shadow: 0 18px 36px rgba(30, 136, 229, .18); margin-bottom: 1.8rem;
         }
