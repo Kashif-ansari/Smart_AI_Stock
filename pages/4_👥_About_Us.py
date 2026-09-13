@@ -4,12 +4,12 @@ import streamlit as st
 
 
 TEAM = [
-    ("Team Leader", "Lead AI Architect & Data Scientist", "TL", "Shapes SmartStock AI's data strategy, forecasting architecture, and responsible AI roadmap."),
-    ("Member 2", "Machine Learning Engineer", "ML", "Builds and evaluates time-series models that turn sales history into dependable demand signals."),
-    ("Member 3", "RAG & Knowledge Systems Developer", "RK", "Connects product knowledge, FAISS retrieval, and Groq reasoning into practical inventory advice."),
-    ("Member 4", "Full-Stack Streamlit UI/UX Designer", "UX", "Designs clear, fast workflows that help commerce teams move from insight to action."),
-    ("Member 5", "Data Engineering & Ingestion Specialist", "DE", "Makes multi-format sales and stock data clean, reliable, and ready for analysis."),
-    ("Member 6", "Business Intelligence & Domain Analyst", "BI", "Translates retail operations needs into useful KPIs, replenishment rules, and decision support."),
+    ("Kashif", "Lead AI Architect & Data Scientist", "TL", "Shapes SmartStock AI's data strategy, forecasting architecture, and responsible AI roadmap.","https://www.linkedin.com/in/muhammad-kashif-ansari-842b22159/","https://github.com/Kashif-ansari"),
+    ("Ahsan", "Machine Learning Engineer", "ML", "Builds and evaluates time-series models that turn sales history into dependable demand signals."),
+    ("Zeeshan", "RAG & Knowledge Systems Developer", "RK", "Connects product knowledge, FAISS retrieval, and Groq reasoning into practical inventory advice.","https://www.linkedin.com/in/zeeshan-ansari-555583424?utm_source=share_via&utm_content=profile&utm_medium=member_android",),
+    ("Aamir", "Full-Stack Streamlit UI/UX Designer", "UX", "Designs clear, fast workflows that help commerce teams move from insight to action.","https://www.linkedin.com/in/amir-iqbal-7a3b7231b?utm_source=share_via&utm_content=profile&utm_medium=member_android",),
+    ("Qasim", "Data Engineering & Ingestion Specialist", "DE", "Makes multi-format sales and stock data clean, reliable, and ready for analysis."),
+    ("Muhammad", "Business Intelligence & Domain Analyst", "BI", "Translates retail operations needs into useful KPIs, replenishment rules, and decision support."),
 ]
 
 st.markdown(
