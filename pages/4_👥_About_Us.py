@@ -76,8 +76,8 @@ st.markdown(
         }
         .block-container {
             max-width: 1400px;
-            padding-left: 2rem;
-            padding-right: 2rem;
+            padding-left: 1rem;
+            padding-right: 1rem;
         }
         .team-card h3 { color: #0f172a !important; margin: .8rem 0 .2rem; }
         .role { color: #1E88E5; font-weight: 700; min-height: 2.8rem; }
