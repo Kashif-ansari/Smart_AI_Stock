@@ -8,7 +8,8 @@ from typing import Any
 import pandas as pd
 
 EMBEDDING_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
-GROQ_MODEL = "llama-3.1-8b-instant"
+#GROQ_MODEL = "llama-3.1-8b-instant"
+GROQ_MODEL = "openai/gpt-oss-20b"
 FAISS_INDEX_DIRECTORY = Path(__file__).resolve().parents[1] / "data" / "inventory_faiss"
 
 
