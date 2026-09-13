@@ -4,12 +4,54 @@ import streamlit as st
 
 
 TEAM = [
-    ("Kashif", "Lead AI Architect & Data Scientist", "TL", "Shapes SmartStock AI's data strategy, forecasting architecture, and responsible AI roadmap.","https://www.linkedin.com/in/muhammad-kashif-ansari-842b22159/","https://github.com/Kashif-ansari"),
-    ("Ahsan", "Machine Learning Engineer", "ML", "Builds and evaluates time-series models that turn sales history into dependable demand signals."),
-    ("Zeeshan", "RAG & Knowledge Systems Developer", "RK", "Connects product knowledge, FAISS retrieval, and Groq reasoning into practical inventory advice.","https://www.linkedin.com/in/zeeshan-ansari-555583424?utm_source=share_via&utm_content=profile&utm_medium=member_android",),
-    ("Aamir", "Full-Stack Streamlit UI/UX Designer", "UX", "Designs clear, fast workflows that help commerce teams move from insight to action.","https://www.linkedin.com/in/amir-iqbal-7a3b7231b?utm_source=share_via&utm_content=profile&utm_medium=member_android",),
-    ("Qasim", "Data Engineering & Ingestion Specialist", "DE", "Makes multi-format sales and stock data clean, reliable, and ready for analysis."),
-    ("Muhammad", "Business Intelligence & Domain Analyst", "BI", "Translates retail operations needs into useful KPIs, replenishment rules, and decision support."),
+    (
+        "Kashif",
+        "Lead AI Architect & Data Scientist",
+        "TL",
+        "Shapes SmartStock AI's data strategy, forecasting architecture, and responsible AI roadmap.",
+        "https://www.linkedin.com/in/muhammad-kashif-ansari-842b22159/",
+        "https://github.com/Kashif-ansari",
+    ),
+    (
+        "Ahsan",
+        "Machine Learning Engineer",
+        "ML",
+        "Builds and evaluates time-series models that turn sales history into dependable demand signals.",
+        "",
+        "",
+    ),
+    (
+        "Zeeshan",
+        "RAG & Knowledge Systems Developer",
+        "RK",
+        "Connects product knowledge, FAISS retrieval, and Groq reasoning into practical inventory advice.",
+        "https://www.linkedin.com/in/zeeshan-ansari-555583424",
+        "",
+    ),
+    (
+        "Aamir",
+        "Full-Stack Streamlit UI/UX Designer",
+        "UX",
+        "Designs clear, fast workflows that help commerce teams move from insight to action.",
+        "https://www.linkedin.com/in/amir-iqbal-7a3b7231b",
+        "",
+    ),
+    (
+        "Qasim",
+        "Data Engineering & Ingestion Specialist",
+        "DE",
+        "Makes multi-format sales and stock data clean, reliable, and ready for analysis.",
+        "",
+        "",
+    ),
+    (
+        "Muhammad",
+        "Business Intelligence & Domain Analyst",
+        "BI",
+        "Translates retail operations needs into useful KPIs, replenishment rules, and decision support.",
+        "",
+        "",
+    ),
 ]
 
 st.markdown(
@@ -49,7 +91,7 @@ st.caption("Replace the member labels, avatars, and placeholder social profiles 
 
 for start in range(0, len(TEAM), 3):
     columns = st.columns(3, gap="large")
-    for column, (name, role, initials, contribution) in zip(columns, TEAM[start : start + 3]):
+    for column, (name, role, initials, contribution, linkedin_url, github_url) in zip(columns, TEAM[start : start + 3]):
         with column:
             with st.container():
                 st.markdown(
@@ -60,8 +102,8 @@ for start in range(0, len(TEAM), 3):
                         <div class="role">{role}</div>
                         <p class="contribution">{contribution}</p>
                         <div class="social-links">
-                            <a href="https://www.linkedin.com/in/your-profile" target="_blank">LinkedIn ↗</a>
-                            <a href="https://github.com/your-username" target="_blank">GitHub ↗</a>
+                            {f'<a href="{linkedin_url}" target="_blank">LinkedIn ↗</a>' if linkedin_url else ''}
+                            {f'<a href="{github_url}" target="_blank">GitHub ↗</a>' if github_url else ''}
                         </div>
                     </article>
                     """,
