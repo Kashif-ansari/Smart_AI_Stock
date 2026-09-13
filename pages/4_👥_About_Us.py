@@ -17,8 +17,8 @@ TEAM = [
         "Machine Learning Engineer",
         "ML",
         "Builds and evaluates time-series models that turn sales history into dependable demand signals.",
-        "",
-        "",
+        "lnkedin.com/in/muhammad-ahsan-59120522",
+        "https://github.com/ahsan14262",
     ),
     (
         "Zeeshan",
@@ -26,7 +26,7 @@ TEAM = [
         "RK",
         "Connects product knowledge, FAISS retrieval, and Groq reasoning into practical inventory advice.",
         "https://www.linkedin.com/in/zeeshan-ansari-555583424",
-        "",
+        "https://github.com/M-Zeeshan834",
     ),
     (
         "Aamir",
@@ -34,23 +34,23 @@ TEAM = [
         "UX",
         "Designs clear, fast workflows that help commerce teams move from insight to action.",
         "https://www.linkedin.com/in/amir-iqbal-7a3b7231b",
-        "",
+        "https://github.com/Kashif-ansari",
     ),
     (
         "Qasim",
         "Data Engineering & Ingestion Specialist",
         "DE",
         "Makes multi-format sales and stock data clean, reliable, and ready for analysis.",
-        "",
-        "",
+        "https://www.linkedin.com/in/muhammad-kashif-ansari-842b22159/",
+        "https://github.com/Kashif-ansari",
     ),
     (
         "Muhammad",
         "Business Intelligence & Domain Analyst",
         "BI",
         "Translates retail operations needs into useful KPIs, replenishment rules, and decision support.",
-        "",
-        "",
+        "https://www.linkedin.com/in/muhammad-kashif-ansari-842b22159/",
+        "https://github.com/Kashif-ansari",
     ),
 ]
 
