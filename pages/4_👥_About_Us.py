@@ -58,7 +58,7 @@ st.markdown(
     """
     <style>
         .team-hero {
-            padding: 2.7rem 2.3rem; border-radius: 50px; color: white;
+            padding: 2.7rem 2.3rem; border-radius: 22px; color: white;
             background: linear-gradient(115deg, #0F172A, #1E88E5 65%, #00C853);
             box-shadow: 0 18px 36px rgba(30, 136, 229, .18); margin-bottom: 1.8rem;
         }
@@ -74,6 +74,11 @@ st.markdown(
             border-radius: 50%; color: white; font-weight: 800; letter-spacing: .05em;
             background: linear-gradient(135deg, #00C853, #1E88E5);
         }
+        .block-container {
+            max-width: 1400px;
+            padding-left: 2rem;
+            padding-right: 2rem;
+        }
         .team-card h3 { color: #0f172a !important; margin: .8rem 0 .2rem; }
         .role { color: #1E88E5; font-weight: 700; min-height: 2.8rem; }
         .contribution { color: #475569; min-height: 4.8rem; line-height: 1.5; }
@@ -87,7 +92,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 
-st.caption("Replace the member labels, avatars, and placeholder social profiles with your team’s details when ready.")
+#st.caption("Replace the member labels, avatars, and placeholder social profiles with your team’s details when ready.")
 
 for start in range(0, len(TEAM), 3):
     columns = st.columns(3, gap="large")
